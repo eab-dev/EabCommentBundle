@@ -1,0 +1,38 @@
+parameters:
+    eab.comment.acl.role.comment.class: Eab\CommentBundle\Acl\RoleCommentAcl
+    eab.comment.listener.notification.class: Eab\CommentBundle\EventListener\CommentPostPersistListener
+    eab.comment.mail.sender: webmaster@example.com
+    eab.comment.mail.receiver: manager@example.com
+    eab.screenname.user.fields: [ first_name, last_name ]
+
+services:
+    # Extension of FosCommentBundle's role checking service
+    # Note: in eZ Publish, no users are ROLE_ADMIN, they are all ROLE_USER
+    eab.comment.acl.comment.roles:
+        class: %eab.comment.acl.role.comment.class%
+        arguments:
+            - @security.context
+            - IS_AUTHENTICATED_FULLY
+            - IS_AUTHENTICATED_ANONYMOUSLY
+            - ROLE_ADMIN
+            - ROLE_ADMIN
+            - %fos_comment.model.comment.class%
+
+    eab.comment.listener.notification:
+        class: %eab.comment.listener.notification.class%
+        arguments:
+            - @ezpublish.api.service.user
+            - @mailer
+            - %eab.comment.mail.sender%
+            - %eab.comment.mail.receiver%
+            - @?monolog.logger.comments
+        tags:
+            - { name: "kernel.event_subscriber" }
+
+    eab.twig.extension.screenname:
+        class: Eab\CommentBundle\Twig\Extension\ScreenNameExtension
+        arguments:
+            - @ezpublish.api.service.user
+            - %eab.screenname.user.fields%
+        tags:
+            - name: twig.extension

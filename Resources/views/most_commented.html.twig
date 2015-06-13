@@ -1,0 +1,12 @@
+{# List most commented articles #}
+
+<aside class="most-commented">
+    <h2>Most commented</h2>
+    <ul>
+        {% for location in locations %}
+            <li>
+                <a href="{{ path( location ) }}">{{ location.contentInfo.name }}</a> ({{ numComments[ loop.index0 ] }})
+            </li>
+        {% endfor %}
+    </ul>
+</aside>

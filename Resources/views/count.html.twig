@@ -1,0 +1,3 @@
+{# Display the number of comments in a thread #}
+
+{% transchoice count with {'%count%': count} from "FOSCommentBundle" %}fos_comment_thread_comment_count{% endtranschoice %}
