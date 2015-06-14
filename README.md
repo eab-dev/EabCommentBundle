@@ -23,6 +23,9 @@ It also provides the following additional features:
 
 * A Twig function allowing you to customize which user content fields are used to display the name of a comment's author
 
+* Integration of [Timeago](http://timeago.yarp.com) jQuery plugin to display dates in fuzzy relative time.
+  [More information](Resources/doc/Timeago.md)
+
 Installation
 ------------
 
@@ -111,7 +114,20 @@ using its file path instead of `resource: "@FOSCommentBundle/Resources/config/ro
    Explanation: by adding it above your main bundle you can add settings to your
    bundle that will override EABCommentBundle's settings.
 
-6. Decide if you want to send notification emails in real time or spool them.
+6. Include the Timeago jQuery plugin. For example, in `page_head_script.html.twig`:
+
+    ```
+    {% javascripts
+        ...
+        '@EabCommentBundle/Resources/public/js/jquery.timeago.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    ```
+
+   Read [more](Resources/doc/Timeago.md) if you don't want to use Timeago.
+
+7. Decide if you want to send notification emails in real time or spool them.
    If you want to spool them, then edit the `swiftmailer` section of `ezpublish/config.yml` and replace:
 
    ```
@@ -128,7 +144,7 @@ using its file path instead of `resource: "@FOSCommentBundle/Resources/config/ro
         path: %kernel.root_dir%/mail/queue
    ```
 
-7. Decide if you want to log each comment to a log file. If you do, then edit the `monolog` section of
+8. Decide if you want to log each comment to a log file. If you do, then edit the `monolog` section of
 `ezpublish/config.yml` and add:
 
   ```

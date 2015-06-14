@@ -1,4 +1,4 @@
-{# Overriding FOS\CommentBundle/Resources/views/Thread/comments.html.twig #}
+{# Master template for comments, overriding FOS\CommentBundle/Resources/views/Thread/Comments.html.twig #}
 
 {% set depth = depth|default(0) %}
 {% set view = view|default('tree') %}
@@ -6,12 +6,6 @@
 {% if depth == 0 %}
     {% if fos_comment_can_comment_thread(thread) %}
         {% render url("fos_comment_new_thread_comments", {"id": thread.id}) %}
-    {% else %}
-        {% block fos_comment_please_login %}
-        <div class="please-login">
-            You need to <a href="#login">login</a> (<a href="/user/register">register</a> first) to add a comment
-        </div>
-        {% endblock %}
     {% endif %}
 
     {% if fos_comment_can_edit_thread(thread) %}
@@ -20,20 +14,12 @@
             {{ (thread.commentable ? 'fos_comment_thread_close' : 'fos_comment_thread_open') | trans({}, 'FOSCommentBundle') }}
         </button>
     </div>
+    {% else %}
+        You need to login to add a comment
     {% endif %}
 
-    <script type="text/javascript">
-        {# Add relative timestamps to comments. See EabCommentBundle/Resources/doc/Timeago.md #}
-        {# Other useful events include: fos_comment_removing_comment fos_comment_edit_comment
-           but they are not useful for updating timestamps #}
-        $(document).on( 'fos_comment_new_comment fos_comment_add_comment', function(event, data) {
-            $( "span.timeago" ).timeago();
-        });
-        $(document).ready( function() {
-            $( "span.timeago" ).timeago();
-        });
-    </script>
-
+    {% set count = thread.numComments %}
+    <h3>{% transchoice count with {'%count%': count} from "FOSCommentBundle" %}fos_comment_thread_comment_count{% endtranschoice %}</h3>
 {% endif %}
 
 {% for commentinfo in comments %}

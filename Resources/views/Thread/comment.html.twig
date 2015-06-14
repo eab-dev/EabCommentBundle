@@ -1,0 +1,20 @@
+{# Rather than override and copy all of FOSCommentBundle:Thread:comment_content.html.twig we can
+override this small template and one block of comment_content.html.twig #}
+
+{% set view = view|default('tree') %}
+{% set depth = depth|default(0) %}
+
+{% embed "FOSCommentBundle:Thread:comment_content.html.twig" %}
+
+    {% block fos_comment_comment_metas_authorline %}
+        {% trans from 'FOSCommentBundle' %}fos_comment_comment_show_by{% endtrans %}
+        <span class="fos_comment_comment_authorname">
+            {% if comment is fos_comment_in_state(constant( 'FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED' )) %}
+                {% trans from 'FOSCommentBundle' %}fos_comment_comment_deleted{% endtrans %}
+            {% else %}
+                {{ screenname( comment.authorName ) }}
+            {% endif %}
+        </span> - <span class="timeago" title="{{ comment.createdAt|date( 'c' ) }}">{{ comment.createdAt|date }}</span>
+    {% endblock fos_comment_comment_metas_authorline %}
+
+{% endembed %}
