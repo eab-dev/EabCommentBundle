@@ -1,7 +1,8 @@
 EABCommentBundle
 ================
 
-Yet another comments bundle! This one is an integration of FOSCommentBundle with eZ Publish.
+Yet another comments bundle! EABCommentBundle is an integration of
+[FOSCommentBundle](https://github.com/FriendsOfSymfony/FOSCommentBundle) with eZ Publish.
 
 Summary
 -------
@@ -32,36 +33,35 @@ Installation
 1. If you haven't done so already, add the Doctrine ORM bundle:
 
    ```
-  composer require --update-no-dev --prefer-dist doctrine/orm
+   composer require --update-no-dev --prefer-dist doctrine/orm
    ```
 
    Edit `ezpublish/config/ezpublish.yml` and add under `doctrine` section:
 
-```
+    ```
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
-```
+    ```
 
 2. Update the database with the new entities (you should back up the database first to be safe):
 
-```
-php ezpublish/console doctrine:schema:update --force
-```
+    ```
+    php ezpublish/console doctrine:schema:update --force
+    ```
 
 3. Follow the [installation instructions](https://github.com/FriendsOfSymfony/FOSCommentBundle/blob/master/Resources/doc/1-setting_up_the_bundle.md)
 for FOSCommentBundle except when editing `ezpublish/routing.yml` add:
 
-  ```
-  fos_comment_api:
-      resource: "../../vendor/friendsofsymfony/comment-bundle/FOS/CommentBundle/Resources/config/routing.yml"
-      prefix: /api
-      type: rest
-      defaults: { _format: html }
-  ```
-
-Explanation: because this bundle override FOSCommentBundle we have to define the resource
-using its file path instead of `resource: "@FOSCommentBundle/Resources/config/routing.yml"`.
+    ```
+    fos_comment_api:
+        resource: "../../vendor/friendsofsymfony/comment-bundle/FOS/CommentBundle/Resources/config/routing.yml"
+        prefix: /api
+        type: rest
+        defaults: { _format: html }
+    ```
+    Explanation: because this bundle override FOSCommentBundle we have to define the resource
+    using its file path instead of `resource: "@FOSCommentBundle/Resources/config/routing.yml"`.
 
 4. Edit `ezpublish/config.yml` and add the bundle to the Assetic configuration:
 
@@ -74,38 +74,46 @@ using its file path instead of `resource: "@FOSCommentBundle/Resources/config/ro
     Add the following block:
 
     ```
-  # Settings for FOSCommentBundle and EABCommentBundle
-  fos_comment:
-      db_driver: orm
-      class:
-          model:
-              comment: Eab\CommentBundle\Entity\Comment
-              thread: Eab\CommentBundle\Entity\Thread
-      acl: true
-      service:
-          acl:
-              thread: fos_comment.acl.thread.roles
-              comment: eab.comment.acl.comment.roles
-              vote: fos_comment.acl.vote.roles
-      acl_roles:
-          comment:
-              create: IS_AUTHENTICATED_REMEMBERED
-              view: IS_AUTHENTICATED_ANONYMOUSLY
-              edit: ROLE_ADMIN
-              delete: ROLE_ADMIN
-          thread:
-              create: IS_AUTHENTICATED_REMEMBERED
-              view: IS_AUTHENTICATED_ANONYMOUSLY
-              edit: ROLE_ADMIN
-              delete: ROLE_ADMIN
-          vote:
-              create: IS_AUTHENTICATED_REMEMBERED
-              view: IS_AUTHENTICATED_ANONYMOUSLY
-              edit: ROLE_ADMIN
-              delete: ROLE_ADMIN
-  ```
+    # Settings for FOSCommentBundle and EABCommentBundle
+    fos_comment:
+        db_driver: orm
+        class:
+            model:
+                comment: Eab\CommentBundle\Entity\Comment
+                thread: Eab\CommentBundle\Entity\Thread
+        acl: true
+        service:
+            acl:
+                thread: fos_comment.acl.thread.roles
+                comment: eab.comment.acl.comment.roles
+                vote: fos_comment.acl.vote.roles
+        acl_roles:
+            comment:
+                create: IS_AUTHENTICATED_REMEMBERED
+                view: IS_AUTHENTICATED_ANONYMOUSLY
+                edit: ROLE_ADMIN
+                delete: ROLE_ADMIN
+            thread:
+                create: IS_AUTHENTICATED_REMEMBERED
+                view: IS_AUTHENTICATED_ANONYMOUSLY
+                edit: ROLE_ADMIN
+                delete: ROLE_ADMIN
+            vote:
+                create: IS_AUTHENTICATED_REMEMBERED
+                view: IS_AUTHENTICATED_ANONYMOUSLY
+                edit: ROLE_ADMIN
+                delete: ROLE_ADMIN
+    ```
 
-5. Edit `ezpublish/EzPublishKernel.php` and add the following line above your main bundle:
+5. Edit `ezpublish/EzPublishKernel.php` and remove these lines:
+
+   ```
+   use EzSystems\CommentsBundle\EzSystemsCommentsBundle;
+   ...
+   new EzSystemsCommentsBundle(),
+   ```
+
+   Add the following line above your main bundle:
 
    ```
    new Eab\CommentBundle\EabCommentBundle(),
@@ -161,8 +169,8 @@ using its file path instead of `resource: "@FOSCommentBundle/Resources/config/ro
 
   Note that this will make all emails spooled, not just those sent by EABCommentBundle.
   Set up a cronjob to send all the spooled emails. For example:
-
   ```
+
   # Every minute, spend 10 seconds sending spooled emails
   * * * * * cd /path/to/ezpublish && php ezpublish/console swiftmailer:spool:send --time-limit=10
   ```
