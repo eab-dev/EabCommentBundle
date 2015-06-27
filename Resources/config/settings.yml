@@ -1,33 +1,32 @@
-# Settings for FOSCommentBundle and EABCommentBundle
+# Settings for FOSCommentBundle
 
-fos_comment:
-    db_driver: orm
-    class:
-        model:
-            comment: Eab\CommentBundle\Entity\Comment
-            thread: Eab\CommentBundle\Entity\Thread
-    acl: true
-    service:
-        acl:
-            # Create your own class and override this to customise edit and delete permissions
-            thread: fos_comment.acl.thread.roles
-            # comment: fos_comment.acl.comment.roles
-            # Use our own security service to allow users to edit their own comments
-            comment: eab.comment.acl.comment.roles
-            vote: fos_comment.acl.vote.roles
-    acl_roles:
-        comment:
-            create: IS_AUTHENTICATED_REMEMBERED
-            view: IS_AUTHENTICATED_ANONYMOUSLY
-            edit: ROLE_ADMIN
-            delete: ROLE_ADMIN
-        thread:
-            create: IS_AUTHENTICATED_REMEMBERED
-            view: IS_AUTHENTICATED_ANONYMOUSLY
-            edit: ROLE_ADMIN
-            delete: ROLE_ADMIN
-        vote:
-            create: IS_AUTHENTICATED_REMEMBERED
-            view: IS_AUTHENTICATED_ANONYMOUSLY
-            edit: ROLE_ADMIN
-            delete: ROLE_ADMIN
+db_driver: orm
+class:
+    model:
+        comment: Eab\CommentBundle\Entity\Comment
+        thread: Eab\CommentBundle\Entity\Thread
+acl: true
+service:
+    acl:
+        # Create your own class and override this to customise edit and delete permissions
+        thread: fos_comment.acl.thread.roles
+        # comment: fos_comment.acl.comment.roles
+        # Use our own security service to allow users to edit their own comments
+        comment: eab.comment.acl.comment.roles
+        vote: fos_comment.acl.vote.roles
+acl_roles:
+    comment:
+        create: IS_AUTHENTICATED_REMEMBERED
+        view: IS_AUTHENTICATED_ANONYMOUSLY
+        edit: ROLE_ADMIN
+        delete: ROLE_ADMIN
+    thread:
+        create: IS_AUTHENTICATED_REMEMBERED
+        view: IS_AUTHENTICATED_ANONYMOUSLY
+        edit: ROLE_ADMIN
+        delete: ROLE_ADMIN
+    vote:
+        create: IS_AUTHENTICATED_REMEMBERED
+        view: IS_AUTHENTICATED_ANONYMOUSLY
+        edit: ROLE_ADMIN
+        delete: ROLE_ADMIN
