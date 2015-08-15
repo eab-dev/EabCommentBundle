@@ -1,6 +1,10 @@
 <?php
 
-/*  */
+/**
+ * Listen for the event 'onCommentPersist'which is fired after a comment has
+ * been persisted. Then send an email to an administrator and record it in the
+ * log file.
+ */
 
 namespace Eab\CommentBundle\EventListener;
 
@@ -11,11 +15,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Psr\Log\LoggerInterface;
 use eZ\Publish\API\Repository\UserService;
 
-/**
- * Listen for the event 'onCommentPersist'which is fired after a comment has
- * been persisted. Then send an email to an administrator and record it in the
- * log file.
- */
 class CommentPostPersistListener implements EventSubscriberInterface
 {
     /**
@@ -47,6 +46,9 @@ class CommentPostPersistListener implements EventSubscriberInterface
      * Constructor
      *
      * @param UserService $userService
+     * @param LoggerInterface $logger
+     * @param string $sender
+     * @param string $receiver
      * @param LoggerInterface $logger
      */
     public function __construct(
